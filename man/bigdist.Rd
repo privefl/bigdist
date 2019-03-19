@@ -4,7 +4,7 @@
 \alias{bigdist}
 \title{Read or Create a distance matrix on disk}
 \usage{
-bigdist(mat, file, method = "euclidean", type = "float", nproc = 1)
+bigdist(mat, file, method = "euclidean", type = "float")
 }
 \arguments{
 \item{mat}{Numeric matrix. When missing, attempts to connect to existing
@@ -19,9 +19,6 @@ format.}
 
 \item{type}{(string, default: 'float') Storage type of FBM. See
 \code{\link[bigstatsr]{FBM}}. This ignored when mat is missing.}
-
-\item{nproc}{(positive integer, default: 1) Number of parallel processes via
-forking. See details. This ignored when mat is missing.}
 }
 \value{
 An object of class 'bigdist'.
@@ -42,23 +39,25 @@ bigdist class is a list where the key 'fbm' holds the FBM
   parts of distance matrices and apply functions over rows/columns. For
   efficient operations, write C++ functions to talk to \pkg{bigstatsr}'s
   \code{\link[bigstatsr]{FBM}}.
+
+  The distance computation and writing to FBM may be parallelized by setting
+  a future backend
 }
 \examples{
 # basics of 'bigdist'
 # create a random matrix
 set.seed(1)
-amat <- matrix(rnorm(1e4), ncol = 10)
+amat <- matrix(rnorm(1e3), ncol = 10)
 td   <- tempdir()
-dir.create(td)
 
 # create a bigdist object with FBM (file-backed matrix) on disk
-temp <- bigdist(mat = amat, file = file.path(td, "tempfile"))
+temp <- bigdist(mat = amat, file = file.path(td, "temp_ex1"))
 temp
 temp$fbm$backingfile
 temp$fbm[1, 2]
 
 # connect to FBM on disk as a bigdist object
-temp2 <- bigdist(file = file.path(td, "tempfile_1000_float"))
+temp2 <- bigdist(file = file.path(td, "temp_ex1_100_float"))
 temp2
 temp2$fbm[1,2]
 
@@ -90,15 +89,11 @@ bigdist_replace(temp, k = 3:7, value = 51:55)
 bigdist_extract(temp, k = 3:7)
 
 # subset a bigdist object
-temp_subset <- bigdist_subset(temp, index = 201:300, file = file.path(td, "tempfile2"))
+temp_subset <- bigdist_subset(temp, index = 21:30, file = file.path(td, "temp_ex2"))
 temp_subset
 temp_subset$fbm$backingfile
 
 # convert a dist object(in memory) to a bigdist object
-temp3 <- as_bigdist(dist(mtcars), file = file.path(td, "tempfile3"))
+temp3 <- as_bigdist(dist(mtcars), file = file.path(td, "temp_ex3"))
 temp3
-
-# remove the FBM from disk
-unlink(td, recursive = TRUE)
-
 }

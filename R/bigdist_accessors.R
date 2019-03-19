@@ -3,6 +3,12 @@
 #' @description Size of bigdist
 #' @param x Object of class 'bigdist'
 #' @export
+#' @examples
+#' set.seed(1)
+#' amat <- matrix(rnorm(1e3), ncol = 10)
+#' td   <- tempdir()
+#' temp <- bigdist(mat = amat, file = file.path(td, "temp_ex5"))
+#' bigdist_size(temp)
 bigdist_size <- function(x){
   assertthat::assert_that(inherits(x, "bigdist"))
   x[["fbm"]][["ncol"]]
@@ -23,6 +29,16 @@ bigdist_size <- function(x){
 #'   missing. In ij-mode, k should be missing and both i and j are optional. If
 #'   i or j are missing, they are interpreted as all values of i or j (similar
 #'   to matrix or dataframe subsetting).
+#' @examples
+#' set.seed(1)
+#' amat <- matrix(rnorm(1e3), ncol = 10)
+#' td   <- tempdir()
+#' temp <- bigdist(mat = amat, file = file.path(td, "temp_ex6"))
+#' bigdist_extract(temp, 1, 2)
+#' bigdist_extract(temp, 1:2, 3:4)
+#' bigdist_extract(temp, 1:2, 3:4, product = "inner")
+#' dim(bigdist_extract(temp, 1:2,))
+#' dim(bigdist_extract(temp, , 3:4))
 #' @export
 bigdist_extract <- function(x, i, j, k, product = "outer"){
 
@@ -104,6 +120,15 @@ bigdist_extract <- function(x, i, j, k, product = "outer"){
 #'   }
 #'
 #' @return bigdist object
+#' @examples
+#' set.seed(1)
+#' amat <- matrix(rnorm(1e3), ncol = 10)
+#' td   <- tempdir()
+#' temp <- bigdist(mat = amat, file = file.path(td, "temp_ex7"))
+#' bigdist_replace(temp, 1, 2, 10)
+#' bigdist_extract(temp, 1, 2)
+#' bigdist_replace(temp, 1:2, 3:4, 11:12)
+#' bigdist_extract(temp, 1:2, 3:4, product = "inner")
 #' @export
 bigdist_replace <- function(x, i, j, value, k){
 
@@ -174,6 +199,14 @@ bigdist_replace <- function(x, i, j, value, k){
 #' @details The filename format is of the form <somename>_<size>_<type>.bk where
 #'   size is the number of observations and type is the data type like 'double',
 #'   'float'.
+#' @examples
+#' set.seed(1)
+#' amat <- matrix(rnorm(1e3), ncol = 10)
+#' td   <- tempdir()
+#' temp <- bigdist(mat = amat, file = file.path(td, "temp_ex8"))
+#' temp_subset <- bigdist_subset(temp, index = 21:30, file = file.path(td, "temp_ex9"))
+#' temp_subset
+#' temp_subset$fbm$backingfile
 #' @export
 bigdist_subset <- function(x, index, file){
 

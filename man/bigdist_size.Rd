@@ -12,3 +12,10 @@ bigdist_size(x)
 \description{
 Size of bigdist
 }
+\examples{
+set.seed(1)
+amat <- matrix(rnorm(1e3), ncol = 10)
+td   <- tempdir()
+temp <- bigdist(mat = amat, file = file.path(td, "temp_ex5"))
+bigdist_size(temp)
+}
